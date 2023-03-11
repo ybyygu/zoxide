@@ -21,7 +21,11 @@ pub struct Stream<'a> {
 
 impl<'a> Stream<'a> {
     pub fn new(db: &'a mut Database, now: Epoch) -> Self {
-        db.sort_by_score(now);
+        if std::env::var_os("_ZO_LATEST").is_some() {
+            db.sort_by_last_access();
+        } else {
+            db.sort_by_score(now);
+        }
         let idxs = (0..db.dirs().len()).rev();
 
         // If a directory is deleted and hasn't been used for 3 months, delete

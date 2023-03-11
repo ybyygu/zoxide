@@ -173,6 +173,11 @@ impl Database {
         self.with_dirty_mut(|dirty| *dirty = true);
     }
 
+    pub fn sort_by_last_access(&mut self) {
+        self.with_dirs_mut(|dirs| dirs.sort_unstable_by(|dir1, dir2| dir1.last_accessed.cmp(&dir2.last_accessed)));
+        self.with_dirty_mut(|dirty| *dirty = true);
+    }
+
     pub fn sort_by_score(&mut self, now: Epoch) {
         self.with_dirs_mut(|dirs| {
             dirs.sort_unstable_by(|dir1: &Dir, dir2: &Dir| {
